@@ -89,7 +89,6 @@ void new_bubble(unsigned int idx)
 
     b->y_pos = random(NUM_LEDS);
     b->radius = 1 + random(9);
-//    b->radius = 0;
 
     do {
         uint8_t channel = random(3);
@@ -108,7 +107,6 @@ void new_bubble(unsigned int idx)
 
 void render_bubble(unsigned int idx)
 {
-    ////Serial.print("render_bubble\n");
     t_bubble *b = &(array[idx]);
 
     // Don't render empty bubbles
@@ -119,15 +117,16 @@ void render_bubble(unsigned int idx)
 
     uint8_t y_max = b->y_pos + b->radius;
     if (y_max >= NUM_LEDS) y_max = NUM_LEDS - 1;
-    //Serial.print("render_bubble: idx="); //Serial.print(idx, DEC);
-    //Serial.print(             "  radius="); //Serial.print(b->radius, DEC);
-    //Serial.print("\n");
+
     for (int j = y_min; j <= y_max; j++)
     {
+<<<<<<< HEAD
         //Serial.print("\tled_idx=");
         //Serial.print(j, DEC);
         //Serial.print("\n");
 
+=======
+>>>>>>> cae5c69f488c7b98bd14ce8d9fbc33465b1f8cf7
         uint16_t r = leds[0][j].r + b->r;
         if (r > 255) r = 255;
         leds[0][j].r = r;
@@ -144,7 +143,6 @@ void render_bubble(unsigned int idx)
 
 void render_bubbles()
 {
-    ////Serial.print("render_bubbles\n");
     memset(leds[0], 0,  NUM_LEDS * sizeof(struct CRGB));
     arr_for_each(&render_bubble);
 }
@@ -152,7 +150,6 @@ void render_bubbles()
 
 void update_bubble(unsigned int idx)
 {
-    ////Serial.print("update_bubble\n");
     t_bubble *b = &(array[idx]);
 
     unsigned long now = millis();
@@ -180,7 +177,6 @@ void update_bubble(unsigned int idx)
 
 void update_bubbles()
 {
-    ////Serial.print("update_bubbles\n");
     arr_for_each(&update_bubble);
 }
 
