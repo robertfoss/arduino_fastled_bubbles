@@ -120,13 +120,6 @@ void render_bubble(unsigned int idx)
 
     for (int j = y_min; j <= y_max; j++)
     {
-<<<<<<< HEAD
-        //Serial.print("\tled_idx=");
-        //Serial.print(j, DEC);
-        //Serial.print("\n");
-
-=======
->>>>>>> cae5c69f488c7b98bd14ce8d9fbc33465b1f8cf7
         uint16_t r = leds[0][j].r + b->r;
         if (r > 255) r = 255;
         leds[0][j].r = r;
