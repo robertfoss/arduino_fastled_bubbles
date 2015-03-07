@@ -5,8 +5,8 @@
 #define NUM_LEDS   (160)
 #define NUM_STRIPS (1)
 
-#define PIN_DATA   (1)
-#define PIN_CLOCK  (0)
+#define PIN_DATA   (19)
+#define PIN_CLOCK  (18)
 
 CRGB leds[NUM_STRIPS][NUM_LEDS];
 
@@ -71,10 +71,10 @@ void arr_for_each(void (*func)(unsigned int))
   {
     unsigned int idx = (arr_start + i) & ARRAY_MOD_MASK;
     func(idx);
-    
+
     if (leading_dead_bubbles == i && dead_bubble(idx)) leading_dead_bubbles++;
   }
-  
+
   if (leading_dead_bubbles > 0) {
       if (arr_size <= leading_dead_bubbles) { error(); return; }
       arr_start = (arr_start + leading_dead_bubbles) & ARRAY_MOD_MASK;
@@ -86,18 +86,18 @@ void new_bubble(unsigned int idx)
 {
     t_bubble *b = &(array[idx]);
     memset(b, 0, sizeof(t_bubble));
-    
+
     b->y_pos = random(NUM_LEDS);
     b->radius = 1 + random(9);
 //    b->radius = 0;
-    
+
     do {
         uint8_t channel = random(3);
         if (random(2)) b->target_r = random(255);
         if (random(2)) b->target_g = random(255);
         if (random(2)) b->target_b = random(255);
     } while (b->target_r == 0 && b->target_g == 0 && b->target_b == 0);
-    
+
     b->time_created = millis();
     b->time_live = random(7000);
     b->time_fade_in  = 750 + random(5000);
@@ -113,10 +113,10 @@ void render_bubble(unsigned int idx)
 
     // Don't render empty bubbles
     if (b->r == 0 && b->g == 0 && b->b == 0) return;
-    
+
     uint8_t y_min = b->y_pos - b->radius;
     if (y_min < 0) y_min = 0;
-    
+
     uint8_t y_max = b->y_pos + b->radius;
     if (y_max >= NUM_LEDS) y_max = NUM_LEDS - 1;
     //Serial.print("render_bubble: idx="); //Serial.print(idx, DEC);
@@ -127,15 +127,15 @@ void render_bubble(unsigned int idx)
         //Serial.print("\tled_idx=");
         //Serial.print(j, DEC);
         //Serial.print("\n");
-        
+
         uint16_t r = leds[0][j].r + b->r;
         if (r > 255) r = 255;
         leds[0][j].r = r;
-        
+
         uint16_t g = leds[0][j].g + b->g;
         if (g > 255) g = 255;
         leds[0][j].g = g;
-        
+
         uint16_t bl = leds[0][j].b + b->b;
         if (bl > 255) bl = 255;
         leds[0][j].b = bl;
@@ -189,12 +189,14 @@ void setup()
     randomSeed(analogRead(0));
     LEDS.addLeds<LPD8806, PIN_DATA,  PIN_CLOCK>(leds[0],  NUM_LEDS);
     memset(leds[0], 0, NUM_LEDS*sizeof(CRGB));
+    FastLED.setBrightness(64);
 }
 
 void loop()
 {
+/*
     unsigned long now = millis();
-    unsigned long time_next_iteration = time_last_iteration + 25;
+    unsigned long time_next_iteration = time_last_iteration + 10;
     Serial.print((long)time_next_iteration - (long)now, DEC);
     Serial.print("\n");
     if (time_next_iteration > now)
@@ -203,7 +205,7 @@ void loop()
         return;
     }
     time_last_iteration = now;
-    
+*/
     update_bubbles();
     render_bubbles();
     LEDS.show();
